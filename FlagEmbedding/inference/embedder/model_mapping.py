@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Type, List
+from typing import Type
 from dataclasses import dataclass
 from collections import OrderedDict
 
@@ -36,8 +36,8 @@ class EmbedderConfig:
     query_instruction_format: str = "{}{}"
 
 
-# BGE models mapping
-BGE_MAPPING = OrderedDict([
+AUTO_EMBEDDER_MAPPING = OrderedDict([
+    # ============================== BGE ==============================
     (
         "bge-en-icl", 
         EmbedderConfig(FlagICLModel, PoolingMethod.LAST_TOKEN, query_instruction_format="<instruct>{}\n<query>{}")
@@ -98,10 +98,7 @@ BGE_MAPPING = OrderedDict([
         "bge-small-zh",
         EmbedderConfig(FlagModel, PoolingMethod.CLS)
     ),
-])
-
-# E5 models mapping
-E5_MAPPING = OrderedDict([
+    # ============================== E5 ==============================
     (
         "e5-mistral-7b-instruct",
         EmbedderConfig(FlagLLMModel, PoolingMethod.LAST_TOKEN, query_instruction_format="Instruct: {}\nQuery: {}")
@@ -146,10 +143,7 @@ E5_MAPPING = OrderedDict([
         "e5-small",
         EmbedderConfig(FlagModel, PoolingMethod.MEAN)
     ),
-])
-
-# GTE models mapping
-GTE_MAPPING = OrderedDict([
+    # ============================== GTE ==============================
     (
         "gte-Qwen2-7B-instruct",
         EmbedderConfig(FlagLLMModel, PoolingMethod.LAST_TOKEN, trust_remote_code=True, query_instruction_format="Instruct: {}\nQuery: {}")
@@ -198,10 +192,7 @@ GTE_MAPPING = OrderedDict([
         'gte-small-zh',
         EmbedderConfig(FlagModel, PoolingMethod.CLS)
     ),
-])
-
-# SFR models mapping
-SFR_MAPPING = OrderedDict([
+    # ============================== SFR ==============================
     (
         'SFR-Embedding-2_R',
         EmbedderConfig(FlagLLMModel, PoolingMethod.LAST_TOKEN, query_instruction_format="Instruct: {}\nQuery: {}")
@@ -210,37 +201,23 @@ SFR_MAPPING = OrderedDict([
         'SFR-Embedding-Mistral',
         EmbedderConfig(FlagLLMModel, PoolingMethod.LAST_TOKEN, query_instruction_format="Instruct: {}\nQuery: {}")
     ),
-])
-
-# Linq models mapping
-LINQ_MAPPING = OrderedDict([
+    # ============================== Linq ==============================
     (
         'Linq-Embed-Mistral',
         EmbedderConfig(FlagLLMModel, PoolingMethod.LAST_TOKEN, query_instruction_format="Instruct: {}\nQuery: {}")
     ),
-])
-
-# BCE models mapping
-BCE_MAPPING = OrderedDict([
+    # ============================== BCE ==============================
     (
         'bce-embedding-base_v1',
         EmbedderConfig(FlagModel, PoolingMethod.CLS)
     ),
+    (
+        'NV-Embed-v1',
+        EmbedderConfig(FlagLLMModel, PoolingMethod.MEAN, trust_remote_code=True, query_instruction_format="Instruct: {}\nQuery: {}")
+    ),
+    (
+        'NV-Embed-v2',
+        EmbedderConfig(FlagLLMModel, PoolingMethod.MEAN, trust_remote_code=True, query_instruction_format="Instruct: {}\nQuery: {}")
+    ),
+    # TODO: Add more models, such as Jina, Stella_v5, NV-Embed, etc.
 ])
-
-# Combine all mappings
-AUTO_EMBEDDER_MAPPING = OrderedDict()
-AUTO_EMBEDDER_MAPPING.update(BGE_MAPPING)
-AUTO_EMBEDDER_MAPPING.update(E5_MAPPING)
-AUTO_EMBEDDER_MAPPING.update(GTE_MAPPING)
-AUTO_EMBEDDER_MAPPING.update(SFR_MAPPING)
-AUTO_EMBEDDER_MAPPING.update(LINQ_MAPPING)
-AUTO_EMBEDDER_MAPPING.update(BCE_MAPPING)
-
-# TODO: Add more models, such as Jina, Stella_v5, NV-Embed, etc.
-
-def support_native_bge_model_list()->List[str]:
-    return list(BGE_MAPPING.keys())
-
-def support_model_list()->List[str]:
-    return list(AUTO_EMBEDDER_MAPPING.keys())
